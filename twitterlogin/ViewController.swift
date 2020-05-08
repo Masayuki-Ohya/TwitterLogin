@@ -7,14 +7,30 @@
 //
 
 import UIKit
+import FirebaseAuth
+import TwitterKit
 
 class ViewController: UIViewController {
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view.
+        let logInButton = TWTRLogInButton(logInCompletion: { session, error in
+            if let session = session {
+                let authToken = session.authToken
+                let authTokenSecret = session.authTokenSecret
+                let credential = TwitterAuthProvider.credential(withToken: session.authToken, secret: session.authTokenSecret)
+                Auth.auth().signIn(with: credential) { (authResult, error) in
+                    if let error = error { return }
+                    
+                }
+            }
+        })
+        
+        logInButton.center = self.view.center
+        self.view.addSubview(logInButton)
+        
     }
-
+    
 
 }
 
